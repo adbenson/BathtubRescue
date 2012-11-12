@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -77,7 +76,6 @@ public class CustomSurface extends SurfaceView implements SurfaceHolder.Callback
 		
 		ticker.setDrawing(true);		
 	}
-
 	public void surfaceCreated(SurfaceHolder holder) {
 		currentHolder = holder;
 		ticker.start();

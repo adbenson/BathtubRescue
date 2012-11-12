@@ -9,6 +9,7 @@ import net.adbenson.android.drawing.Vector;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
+import android.graphics.drawable.shapes.Shape;
 import android.hardware.Camera.Area;
 
 
@@ -34,8 +35,8 @@ public class Person implements Comparable, DrawingQueueable{
 	
 	public Person(Color color, Vector location, double scale) {
 		shape = (Area) PROTO.clone();
-		wave = (Path) WAVE.clone();
-		waveCrest = (Path) WAVE_CREST.clone();
+		wave = new Path(WAVE);
+		waveCrest = new Path(WAVE_CREST);
 		
 		AffineTransform scaler = AffineTransform.getScaleInstance(scale, scale);
 		
@@ -79,7 +80,7 @@ public class Person implements Comparable, DrawingQueueable{
 		return wave;
 	}
 	
-	private static Area generatePrototype() {
+	private static Shape generatePrototype() {
 		Path body = new Path();
 		body.moveTo(1, 30);//between feet
 		body.lineTo(10, 30);//R foot

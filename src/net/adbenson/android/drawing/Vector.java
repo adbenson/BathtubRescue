@@ -44,6 +44,10 @@ public class Vector extends PointF {
 		return this.length();
 	}
 	
+	public float length(Vector v) {
+		return length(v.x, v.y);
+	}
+	
 	public Vector scale(double delta) {
 		return new Vector(x*delta, y*delta);
 	}

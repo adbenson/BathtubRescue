@@ -127,8 +127,8 @@ public class PullString implements DrawingQueueable {
 				AffineTransform rotate = AffineTransform.getRotateInstance(path.getAngle()-HALF_PI);
 				AffineTransform translate = AffineTransform.getTranslateInstance(start.x, start.y);
 				
-				Path tempTop = new Path2D.Double(topSpring);
-				Path tempBottom = new Path2D.Double(bottomSpring);
+				Path tempTop = new Path(topSpring);
+				Path tempBottom = new Path(bottomSpring);
 				
 				tempTop.transform(scale);
 				tempBottom.transform(scale);

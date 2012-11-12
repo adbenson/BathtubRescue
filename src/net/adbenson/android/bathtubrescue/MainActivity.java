@@ -17,6 +17,8 @@ public class MainActivity extends Activity {
                                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
         setContentView(R.layout.canvas_layout);
+        
+        CustomSurface surface = (CustomSurface) findViewById(R.id.surface);
     }
 
     @Override
