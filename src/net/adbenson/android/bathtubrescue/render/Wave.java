@@ -1,4 +1,4 @@
-package net.adbenson.android.bathtubrescue.objects;
+package net.adbenson.android.bathtubrescue.render;
 
 import java.util.Random;
 
@@ -13,17 +13,17 @@ import android.graphics.drawable.shapes.Shape;
 import android.hardware.Camera.Area;
 
 
-public class Person implements Comparable, DrawingQueueable{
-	private static final Area PROTO = generatePrototype();
-	private static final Path WAVE = generateWaveShape();
-	private static final Path WAVE_CREST = generateWaveCrest();
+public class Wave implements Comparable, DrawingQueueable, AbstractModelRender{
+//	private static final Area PROTO = generatePrototype();
+//	private static final Path WAVE = generateWaveShape();
+//	private static final Path WAVE_CREST = generateWaveCrest();
 	
 	public static final double swayRate = 0.1;
 	
 	private Area shape;
 	private Path wave;
 	private Path waveCrest;
-	private Color color;
+	private int color;
 	private Vector location;
 	private double size;
 	
@@ -33,7 +33,7 @@ public class Person implements Comparable, DrawingQueueable{
 	
 	private boolean inWater;
 	
-	public Person(Color color, Vector location, double scale) {
+	public Wave(int color, Vector location, double scale) {
 		shape = (Area) PROTO.clone();
 		wave = new Path(WAVE);
 		waveCrest = new Path(WAVE_CREST);
@@ -123,35 +123,35 @@ public class Person implements Comparable, DrawingQueueable{
 				
 				Vector tempLocation = location;
 				
-				if (inWater) {
-					updateSway();
-					tempLocation = tempLocation.add(0, swayOffset);
-				}
-				
-				g.setTransform(AffineTransform.getTranslateInstance(tempLocation.x, tempLocation.y));
-						
-				g.setStroke(new BasicStroke(1));
-				g.setColor(color);
-				g.fill(shape);
-				g.setColor(Color.black);
-				g.draw(shape);
-				
-				if (inWater) {
-					g.setColor(Color.blue);
-//					g.setTransform(AffineTransform.getTranslateInstance(location.x, location.y));
-					g.fill(wave);
-					g.setColor(Color.black);
-					g.draw(waveCrest);
-				}
+//				if (inWater) {
+//					updateSway();
+//					tempLocation = tempLocation.add(0, swayOffset);
+//				}
+//				
+//				g.setTransform(AffineTransform.getTranslateInstance(tempLocation.x, tempLocation.y));
+//						
+//				g.setStroke(new BasicStroke(1));
+//				g.setColor(color);
+//				g.fill(shape);
+//				g.setColor(Color.BLACK);
+//				g.draw(shape);
+//				
+//				if (inWater) {
+//					g.setColor(Color.BLUE);
+////					g.setTransform(AffineTransform.getTranslateInstance(location.x, location.y));
+//					g.fill(wave);
+//					g.setColor(Color.BLACK);
+//					g.draw(waveCrest);
+//				}
 			}
 		});
 	}
 
 	public int compareTo(Object arg0) {
-		return (int) Math.signum(((Person)arg0).size - this.size);
+		return (int) Math.signum(((Wave)arg0).size - this.size);
 	}
 	
-	public Rectangle getBounds() {
+	public Rect getBounds() {
 		Rectangle bounds = shape.getBounds();
 		bounds.translate(location.intX(), location.intY());
 		return bounds;

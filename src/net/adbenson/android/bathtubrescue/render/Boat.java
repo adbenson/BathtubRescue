@@ -1,8 +1,5 @@
-package net.adbenson.android.bathtubrescue.objects;
+package net.adbenson.android.bathtubrescue.render;
 
-
-
-import java.util.Collections;
 import java.util.LinkedList;
 
 import net.adbenson.android.drawing.Drawable;
@@ -18,7 +15,7 @@ import android.graphics.drawable.shapes.Shape;
 import android.hardware.Camera.Area;
 
 
-public class Boat implements DrawingQueueable{
+public class Boat implements DrawingQueueable, AbstractModelRender{
 		
 	private static final double FRICTION = 0.95;
 	private static final double MAX_TURN_RADIUS = 0.5;
@@ -52,7 +49,7 @@ public class Boat implements DrawingQueueable{
 		position = new Vector(posX, posY);
 		
 		prototype = generateProtoShape();
-		prototype.transform(AffineTransform.getScaleInstance(1.5, 1.5));
+//		prototype.transform(AffineTransform.getScaleInstance(1.5, 1.5));
 		translateShape();
 		
 		string = new PullString();
@@ -164,11 +161,11 @@ public class Boat implements DrawingQueueable{
 		}
 	}
 	
-	private void translateShape() {
-		AffineTransform tx = new AffineTransform();
-		tx.translate(position.x, position.y);
-		tx.rotate(trajectory.getAngle());
-		shape = new Area(tx.createTransformedShape(prototype));
+	public void translateShape() {
+//		AffineTransform tx = new AffineTransform();
+//		tx.translate(position.x, position.y);
+//		tx.rotate(trajectory.getAngle());
+//		shape = new Area(tx.createTransformedShape(prototype));
 	}
 	
 	public void enqueueForDraw(DrawingQueue queue) {
@@ -188,12 +185,12 @@ public class Boat implements DrawingQueueable{
 		        g.fill(shape);
 		                      
 		        if (debug) {
-			        g.setColor(Color.pink);
-			        g.setStroke(new BasicStroke(3));
-			        Vector localTrajectory = trajectory.scale(5).add(position);
-			        g.drawLine(position.intX(), position.intY(), localTrajectory.intX(), localTrajectory.intY());
-			        
-			        g.draw(getBounds());
+//			        g.setColor(Color.pink);
+//			        g.setStroke(new BasicStroke(3));
+//			        Vector localTrajectory = trajectory.scale(5).add(position);
+//			        g.drawLine(position.intX(), position.intY(), localTrajectory.intX(), localTrajectory.intY());
+//			        
+//			        g.draw(getBounds());
 		        }
 			}
 		});
@@ -203,9 +200,9 @@ public class Boat implements DrawingQueueable{
 		return position.add(trajectory.normalize().scale(BOW_DISTANCE));
 	}
 
-	public Shape getShape() {
-		return shape;
-	}
+//	public Shape getShape() {
+//		return shape;
+//	}
 
 	public boolean intersects(Person p) {
 		Rectangle personBounds = p.getBounds();

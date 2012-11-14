@@ -3,9 +3,9 @@ package net.adbenson.android.bathtubrescue;
 import java.util.LinkedList;
 import java.util.Random;
 
-import net.adbenson.android.bathtubrescue.objects.Boat;
-import net.adbenson.android.bathtubrescue.objects.Handle;
-import net.adbenson.android.bathtubrescue.objects.Person;
+import net.adbenson.android.bathtubrescue.model.Boat;
+import net.adbenson.android.bathtubrescue.model.Handle;
+import net.adbenson.android.bathtubrescue.model.Person;
 import net.adbenson.android.drawing.Drawable;
 import net.adbenson.android.drawing.DrawingQueue;
 import net.adbenson.android.drawing.Vector;
@@ -65,7 +65,7 @@ public class ToyRescue {
 		Random r = new Random(System.currentTimeMillis());
 		for(int i=0; i < 10; i++) {
 			Vector location = new Vector(r.nextInt(760)+20, r.nextInt(540)+40);
-			Person p = new Person(Color.getHSBColor(r.nextFloat(), 1.0f, 1.0f), location, (r.nextDouble()*0.25)+0.25);
+			Person p = new Person(Color.HSVToColor(new float[] {r.nextFloat(), 1.0f, 1.0f}), location, (r.nextDouble()*0.25)+0.25);
 			survivors.add(p);
 			floating.add(p);
 		}

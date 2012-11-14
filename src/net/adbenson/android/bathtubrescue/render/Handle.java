@@ -1,4 +1,4 @@
-package net.adbenson.android.bathtubrescue.objects;
+package net.adbenson.android.bathtubrescue.render;
 
 import net.adbenson.android.drawing.Drawable;
 import net.adbenson.android.drawing.DrawingQueue;
@@ -8,7 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.shapes.Shape;
 
-public class Handle extends Vector implements DrawingQueueable{
+public class Handle extends Vector implements DrawingQueueable, AbstractModelRender{
 	
 	public static final int SIZE = 40;
 	private int halfSize = SIZE / 2;

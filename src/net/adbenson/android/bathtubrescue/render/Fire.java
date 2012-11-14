@@ -1,4 +1,4 @@
-package net.adbenson.android.bathtubrescue.objects;
+package net.adbenson.android.bathtubrescue.render;
 
 import java.util.Random;
 
@@ -9,7 +9,7 @@ import net.adbenson.android.drawing.Vector;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-public class Fire implements DrawingQueueable {
+public class Fire implements DrawingQueueable, AbstractModelRender {
 
 	private Vector outerBaseLeft = new Vector(-10, 0);
 	private Vector outerBaseRight = new Vector(10, 0);

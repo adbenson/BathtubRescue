@@ -1,4 +1,4 @@
-package net.adbenson.android.bathtubrescue.objects;
+package net.adbenson.android.bathtubrescue.model;
 
 import net.adbenson.android.drawing.Drawable;
 import net.adbenson.android.drawing.DrawingQueue;
@@ -9,7 +9,7 @@ import android.graphics.Color;
 import android.graphics.Path;
 
 public class PullString implements DrawingQueueable {
-	
+		
 	public static final int LENGTH_MIN = 35;
 	public static final int LENGTH_MAX = 300;
 	public static final float BASE_WIDTH = 6;
@@ -19,14 +19,11 @@ public class PullString implements DrawingQueueable {
 	
 	private static final float HALF_PI = (float) (Math.PI / 2.0);
 	
-	private Path topSpring;
-	private Path bottomSpring;
+	private net.adbenson.android.bathtubrescue.render.PullString render;
 	
 	private Vector end;
 	private Vector start;
 	private Vector trail;
-	
-	private int color = Color.GREEN;
 	
 	private double width;
 	
@@ -40,20 +37,6 @@ public class PullString implements DrawingQueueable {
 	
 	private void generateSprings() {
 		float halfWidth = BASE_WIDTH / 2.0f;
-		
-		topSpring = new Path();
-		bottomSpring = new Path();
-		
-		topSpring.moveTo(1, -halfWidth);
-		bottomSpring.moveTo(2, halfWidth);
-		
-		for(int i=2; i<LENGTH_MIN - 4; i+=2) {
-			topSpring.lineTo(i, halfWidth);
-			topSpring.moveTo(i+1, -halfWidth);
-			
-			bottomSpring.lineTo(i+1, -halfWidth);
-			bottomSpring.moveTo(i+2, halfWidth);
-		}
 	}
 	
 	public void drop() {
@@ -118,35 +101,7 @@ public class PullString implements DrawingQueueable {
 		queue.add(new Drawable(10) {
 			@Override
 			public void draw(Canvas g) {
-				g.setStroke(new BasicStroke(2f));
-				
-				Vector tempEnd = held? end : trail;
-				Vector path = start.subtract(tempEnd);
-				
-				AffineTransform scale = AffineTransform.getScaleInstance(path.magnitude() / LENGTH_MIN, width);
-				AffineTransform rotate = AffineTransform.getRotateInstance(path.getAngle()-HALF_PI);
-				AffineTransform translate = AffineTransform.getTranslateInstance(start.x, start.y);
-				
-				Path tempTop = new Path(topSpring);
-				Path tempBottom = new Path(bottomSpring);
-				
-				tempTop.transform(scale);
-				tempBottom.transform(scale);
-				tempTop.transform(rotate);
-				tempBottom.transform(rotate);
-				tempTop.transform(translate);
-				tempBottom.transform(translate);
-				
-				g.setColor(color.darker().darker());
-				g.draw(tempBottom);
-				
-				g.setColor(color);
-				g.draw(tempTop);
-				
-
-//			    g.drawLine(start.intX(), start.intY(), tempEnd.intX(), tempEnd.intY());
-				
-				
+				render.draw(g);
 			}
 			
 		});
