@@ -7,6 +7,7 @@ import net.adbenson.android.drawing.Vector;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
+import android.graphics.Rect;
 
 public class PullString implements DrawingQueueable, AbstractModelRender {
 	
@@ -91,30 +92,30 @@ public class PullString implements DrawingQueueable, AbstractModelRender {
 		queue.add(new Drawable(10) {
 			@Override
 			public void draw(Canvas g) {
-				g.setStroke(new BasicStroke(2f));
-				
-				Vector tempEnd = held? end : trail;
-				Vector path = start.subtract(tempEnd);
-				
-				AffineTransform scale = AffineTransform.getScaleInstance(path.magnitude() / LENGTH_MIN, width);
-				AffineTransform rotate = AffineTransform.getRotateInstance(path.getAngle()-HALF_PI);
-				AffineTransform translate = AffineTransform.getTranslateInstance(start.x, start.y);
-				
-				Path tempTop = new Path(topSpring);
-				Path tempBottom = new Path(bottomSpring);
-				
-				tempTop.transform(scale);
-				tempBottom.transform(scale);
-				tempTop.transform(rotate);
-				tempBottom.transform(rotate);
-				tempTop.transform(translate);
-				tempBottom.transform(translate);
-				
-				g.setColor(color.darker().darker());
-				g.draw(tempBottom);
-				
-				g.setColor(color);
-				g.draw(tempTop);
+//				g.setStroke(new BasicStroke(2f));
+//				
+//				Vector tempEnd = held? end : trail;
+//				Vector path = start.subtract(tempEnd);
+//				
+//				AffineTransform scale = AffineTransform.getScaleInstance(path.magnitude() / LENGTH_MIN, width);
+//				AffineTransform rotate = AffineTransform.getRotateInstance(path.getAngle()-HALF_PI);
+//				AffineTransform translate = AffineTransform.getTranslateInstance(start.x, start.y);
+//				
+//				Path tempTop = new Path(topSpring);
+//				Path tempBottom = new Path(bottomSpring);
+//				
+//				tempTop.transform(scale);
+//				tempBottom.transform(scale);
+//				tempTop.transform(rotate);
+//				tempBottom.transform(rotate);
+//				tempTop.transform(translate);
+//				tempBottom.transform(translate);
+//				
+//				g.setColor(color.darker().darker());
+//				g.draw(tempBottom);
+//				
+//				g.setColor(color);
+//				g.draw(tempTop);
 				
 
 //			    g.drawLine(start.intX(), start.intY(), tempEnd.intX(), tempEnd.intY());
@@ -127,6 +128,21 @@ public class PullString implements DrawingQueueable, AbstractModelRender {
 
 	public Vector getTrail() {
 		return trail;
+	}
+
+	public void draw(Canvas g) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Rect getBounds() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean intersects(AbstractModelRender that) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

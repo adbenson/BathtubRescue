@@ -3,6 +3,7 @@ package net.adbenson.android.bathtubrescue.render;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 
 public class Wall implements AbstractModelRender {
 	
@@ -16,11 +17,10 @@ public class Wall implements AbstractModelRender {
 	private Paint paint;
 	
 	public Wall() {
-		Paint = new Paint
+		Paint paint = new Paint();
 	}
 
 	public void draw(Canvas g) {
-		
 		if (wall != null) {
 			g.drawPath(wall, paint);
 		}
@@ -46,6 +46,18 @@ public class Wall implements AbstractModelRender {
 	public void setWindowDimensions(int width, int height) {
 		this.windowWidth = width;
 		this.windowHeight = height;
+		
+		wall = generateWall();
+	}
+
+	public Rect getBounds() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean intersects(AbstractModelRender that) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

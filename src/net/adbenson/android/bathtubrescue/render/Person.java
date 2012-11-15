@@ -9,6 +9,7 @@ import net.adbenson.android.drawing.Vector;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.drawable.shapes.Shape;
 import android.hardware.Camera.Area;
 
@@ -20,7 +21,7 @@ public class Person implements Comparable, DrawingQueueable, AbstractModelRender
 	
 	public static final double swayRate = 0.1;
 	
-	private Area shape;
+	private Path shape;
 	private Path wave;
 	private Path waveCrest;
 	private int color;
@@ -34,15 +35,15 @@ public class Person implements Comparable, DrawingQueueable, AbstractModelRender
 	private boolean inWater;
 	
 	public Person(int color, Vector location, double scale) {
-		shape = (Area) PROTO.clone();
-		wave = new Path(WAVE);
-		waveCrest = new Path(WAVE_CREST);
-		
-		AffineTransform scaler = AffineTransform.getScaleInstance(scale, scale);
-		
-		shape.transform(scaler);
-		wave.transform(scaler);
-		waveCrest.transform(scaler);
+//		shape = (Area) PROTO.clone();
+//		wave = new Path(WAVE);
+//		waveCrest = new Path(WAVE_CREST);
+//		
+//		AffineTransform scaler = AffineTransform.getScaleInstance(scale, scale);
+//		
+//		shape.transform(scaler);
+//		wave.transform(scaler);
+//		waveCrest.transform(scaler);
 		
 		this.color = color;
 		this.location = location;
@@ -80,7 +81,7 @@ public class Person implements Comparable, DrawingQueueable, AbstractModelRender
 		return wave;
 	}
 	
-	private static Shape generatePrototype() {
+	private static Path generatePrototype() {
 		Path body = new Path();
 		body.moveTo(1, 30);//between feet
 		body.lineTo(10, 30);//R foot
@@ -98,11 +99,11 @@ public class Person implements Comparable, DrawingQueueable, AbstractModelRender
 		body.lineTo(1, 10);//crotch
 		body.close();
 		
-		Ellipse head = new Ellipse2D.Double(-10, -30, 20, 20);
-		
-		Area area = new Area(body);
-		area.add(new Area(head));
-		return area;
+//		Ellipse head = new Ellipse2D.Double(-10, -30, 20, 20);
+//		
+//		Area area = new Area(body);
+//		area.add(new Area(head));
+		return body;
 	}
 
 	public Vector getLocation() {
@@ -122,8 +123,23 @@ public class Person implements Comparable, DrawingQueueable, AbstractModelRender
 	}
 	
 	public Rect getBounds() {
-		Rectangle bounds = shape.getBounds();
-		bounds.translate(location.intX(), location.intY());
-		return bounds;
+//		Rect bounds = shape.getBounds();
+//		bounds.translate(location.intX(), location.intY());
+		return new Rect();
+	}
+
+	public void draw(Canvas g) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean intersects(AbstractModelRender that) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void enqueueForDraw(DrawingQueue queue) {
+		// TODO Auto-generated method stub
+		
 	}
 }

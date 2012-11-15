@@ -70,7 +70,7 @@ public class Person implements Comparable, DrawingQueueable{
 				personRender.draw(g);
 				
 				if (inWater) {
-					waveRender.setLocation(tempLocation);
+//					waveRender.setLocation(tempLocation);
 					waveRender.draw(g);
 				}
 			}

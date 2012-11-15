@@ -1,13 +1,12 @@
 package net.adbenson.android.bathtubrescue.render;
 
-import java.util.Random;
-
+import net.adbenson.android.drawing.BoundVector;
 import net.adbenson.android.drawing.Drawable;
 import net.adbenson.android.drawing.DrawingQueue;
 import net.adbenson.android.drawing.DrawingQueueable;
 import net.adbenson.android.drawing.Vector;
 import android.graphics.Canvas;
-import android.graphics.Color;
+import android.graphics.Rect;
 
 public class Fire implements DrawingQueueable, AbstractModelRender {
 
@@ -40,84 +39,50 @@ public class Fire implements DrawingQueueable, AbstractModelRender {
 		queue.add(new Drawable(50) {
 			@Override
 			public void draw(Canvas g) {
-				Random rand = new Random(System.currentTimeMillis());
-				int i = rand.nextInt(boundVectors.length);
-				boundVectors[i].randomize();
-				
-				outerPeak.randomize();
-				
-				g.setTransform(AffineTransform.getTranslateInstance(position.intX(), position.intY()));
-//				g.setTransform(AffineTransform.getScaleInstance(2, 2));
-				
-				GeneralPath outer = new GeneralPath();
-				outer.moveTo(outerBaseLeft.x, outerBaseLeft.y);
-				outer.curveTo(outerCP1Left.x, outerCP1Left.y, outerCP2Left.x, outerCP2Left.y, outerPeak.x, outerPeak.y);
-				outer.quadTo(outerCPRight.x, outerCPRight.y, outerBaseRight.x, outerBaseRight.y);
-//				outer.closePath();
-				
-				g.setColor(Color.red);
-				g.fill(outer);
-				
-				GeneralPath inner = new GeneralPath();
-				inner.moveTo(innerBaseLeft.x, innerBaseLeft.y);
-				inner.quadTo(innerCPLeft.x, innerCPRight.y, outerPeak.x+5, innerPeak.y);
-				inner.quadTo(innerCPRight.x, innerCPRight.y, innerBaseRight.x, innerBaseRight.y);
-				inner.closePath();
-				
-				g.setColor(Color.yellow);
-				g.fill(inner);
+//				Random rand = new Random(System.currentTimeMillis());
+//				int i = rand.nextInt(boundVectors.length);
+//				boundVectors[i].randomize();
+//				
+//				outerPeak.randomize();
+//				
+//				g.setTransform(AffineTransform.getTranslateInstance(position.intX(), position.intY()));
+////				g.setTransform(AffineTransform.getScaleInstance(2, 2));
+//				
+//				GeneralPath outer = new GeneralPath();
+//				outer.moveTo(outerBaseLeft.x, outerBaseLeft.y);
+//				outer.curveTo(outerCP1Left.x, outerCP1Left.y, outerCP2Left.x, outerCP2Left.y, outerPeak.x, outerPeak.y);
+//				outer.quadTo(outerCPRight.x, outerCPRight.y, outerBaseRight.x, outerBaseRight.y);
+////				outer.closePath();
+//				
+//				g.setColor(Color.red);
+//				g.fill(outer);
+//				
+//				GeneralPath inner = new GeneralPath();
+//				inner.moveTo(innerBaseLeft.x, innerBaseLeft.y);
+//				inner.quadTo(innerCPLeft.x, innerCPRight.y, outerPeak.x+5, innerPeak.y);
+//				inner.quadTo(innerCPRight.x, innerCPRight.y, innerBaseRight.x, innerBaseRight.y);
+//				inner.closePath();
+//				
+//				g.setColor(Color.yellow);
+//				g.fill(inner);
 			}
 		});
 	}
 
+	public void draw(Canvas g) {
+		// TODO Auto-generated method stub
+		
+	}
 
-}
+	public Rect getBounds() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-class BoundVector extends Vector {
-	
-	double lowX;
-	double lowY;
-	double highX; 
-	double highY;
-	
-	double diffX;
-	double diffY;
-	
-	Random rand;
-	
-	public BoundVector(double lowX, double lowY, double highX,
-			double highY) {
-		this.lowX = lowX;
-		this.lowY = lowY;
-		this.highX = highX;
-		this.highY = highY;
-		
-		this.x = (lowX + highX) / 2.0;
-		this.y = (lowY + highY) / 2.0;
-		
-		diffX = highX - lowX;
-		diffY = highY - lowY;
-		
-		rand = new Random(System.currentTimeMillis());
+	public boolean intersects(AbstractModelRender that) {
+		// TODO Auto-generated method stub
+		return false;
 	}
-	
-	public void randomize() {
-		x = randomize(x, diffX, lowX, highX);
-		y = randomize(y, diffY, lowY, highY);
-	}
-	
-	private double randomize(double val, double diff, double low, double high) {
-		if (diff > 0) {
-			double randFactor = (rand.nextDouble() - 0.5) / 3.0;		
-			double delta = diff * randFactor;
-			return constrain(val + delta, low, high);
-		}
-		else {
-			return val;
-		}
-	}
-	
-	private double constrain(double val, double min, double max) {
-		return Math.min(max, Math.max(min, val));
-	}
+
+
 }

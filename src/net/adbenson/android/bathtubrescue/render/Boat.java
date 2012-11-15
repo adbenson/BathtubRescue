@@ -33,24 +33,9 @@ public class Boat implements DrawingQueueable, AbstractModelRender{
 		prototype = generateProtoShape();
 //		prototype.transform(AffineTransform.getScaleInstance(1.5, 1.5));
 		translateShape();
-		
-		string = new PullString();
-		string.setStart(getBow());
-		string.setTrail(trajectory);
-		string.setEnd(string.getTrail());
-		string.drop();
-		
-		crashed = false;
-		
-		fire = new Fire();
-		passengers = new LinkedList<Person>();
+
 	}
-	
-	public void crash() {
-		trajectory = new Vector(0, 0);
-		string.drop();
-		crashed = true;
-	}
+
 
 	public Rect getBounds() {
 		Rect bounds = shape.getBounds();
@@ -72,43 +57,45 @@ public class Boat implements DrawingQueueable, AbstractModelRender{
 		return shape;
 	}
 	
-	public boolean isStringHeld() {
-		return string.isHeld();
-	}
-	
-	public Vector getPosition() {
-		return position;
-	}
-	
 	public void translateShape() {
 //		AffineTransform tx = new AffineTransform();
 //		tx.translate(position.x, position.y);
 //		tx.rotate(trajectory.getAngle());
 //		shape = new Area(tx.createTransformedShape(prototype));
 	}
-	
-	public Vector getBow() {
-		return position.add(trajectory.normalize().scale(BOW_DISTANCE));
-	}
-
 //	public Shape getShape() {
 //		return shape;
 //	}
 
 	public boolean intersects(Person p) {
-		Rectangle personBounds = p.getBounds();
-		//Coarse test
-		if (! getBounds().intersects(p.getBounds())) {
-			return false;
-		}
+//		Rectangle personBounds = p.getBounds();
+//		//Coarse test
+//		if (! getBounds().intersects(p.getBounds())) {
+//			return false;
+//		}
+//		
+//		//Fine test
+//		if (shape.intersects(personBounds)) {
+//			return true;
+//		}
+//		else {
+//			return false;
+//		}
+		return false;
+	}
+
+	public void draw(Canvas g) {
+		// TODO Auto-generated method stub
 		
-		//Fine test
-		if (shape.intersects(personBounds)) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	}
+
+	public boolean intersects(AbstractModelRender that) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void enqueueForDraw(DrawingQueue queue) {
+		// TODO Auto-generated method stub
 		
 	}
 

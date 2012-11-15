@@ -1,5 +1,6 @@
 package net.adbenson.android.bathtubrescue.model;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 import net.adbenson.android.drawing.Drawable;
@@ -7,13 +8,8 @@ import net.adbenson.android.drawing.DrawingQueue;
 import net.adbenson.android.drawing.DrawingQueueable;
 import net.adbenson.android.drawing.Vector;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.graphics.Region;
-import android.graphics.drawable.shapes.Shape;
-import android.hardware.Camera.Area;
-
 
 public class Boat implements DrawingQueueable{
 		
@@ -66,7 +62,8 @@ public class Boat implements DrawingQueueable{
 	}
 
 	public Rect getBounds() {
-		Rect bounds = shape.getBounds();
+		Rect bounds = render.getBounds();
+		bounds.offsetTo(position.intX(), position.intY());
 		return bounds;
 	}
 	
@@ -192,20 +189,20 @@ public class Boat implements DrawingQueueable{
 //	}
 
 	public boolean intersects(Person p) {
-		Rectangle personBounds = p.getBounds();
-		//Coarse test
-		if (! getBounds().intersects(p.getBounds())) {
-			return false;
-		}
-		
-		//Fine test
-		if (shape.intersects(personBounds)) {
-			return true;
-		}
-		else {
-			return false;
-		}
-		
+//		Rectangle personBounds = p.getBounds();
+//		//Coarse test
+//		if (! getBounds().intersects(p.getBounds())) {
+//			return false;
+//		}
+//		
+//		//Fine test
+//		if (shape.intersects(personBounds)) {
+//			return true;
+//		}
+//		else {
+//			return false;
+//		}
+		return false;
 	}
 
 	public void pickup(Person p) {
