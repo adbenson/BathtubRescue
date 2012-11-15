@@ -116,36 +116,6 @@ public class Person implements Comparable, DrawingQueueable, AbstractModelRender
 	public void setInWater(boolean inWater) {
 		this.inWater = inWater;
 	}
-	
-	public void enqueueForDraw(DrawingQueue queue) {
-		queue.add(new Drawable(5) {
-			public void draw(Canvas g) {
-				
-				Vector tempLocation = location;
-				
-//				if (inWater) {
-//					updateSway();
-//					tempLocation = tempLocation.add(0, swayOffset);
-//				}
-//				
-//				g.setTransform(AffineTransform.getTranslateInstance(tempLocation.x, tempLocation.y));
-//						
-//				g.setStroke(new BasicStroke(1));
-//				g.setColor(color);
-//				g.fill(shape);
-//				g.setColor(Color.BLACK);
-//				g.draw(shape);
-//				
-//				if (inWater) {
-//					g.setColor(Color.BLUE);
-////					g.setTransform(AffineTransform.getTranslateInstance(location.x, location.y));
-//					g.fill(wave);
-//					g.setColor(Color.BLACK);
-//					g.draw(waveCrest);
-//				}
-			}
-		});
-	}
 
 	public int compareTo(Object arg0) {
 		return (int) Math.signum(((Person)arg0).size - this.size);

@@ -120,13 +120,6 @@ public class Wave implements Comparable, DrawingQueueable, AbstractModelRender{
 	public void enqueueForDraw(DrawingQueue queue) {
 		queue.add(new Drawable(5) {
 			public void draw(Canvas g) {
-				
-				Vector tempLocation = location;
-				
-//				if (inWater) {
-//					updateSway();
-//					tempLocation = tempLocation.add(0, swayOffset);
-//				}
 //				
 //				g.setTransform(AffineTransform.getTranslateInstance(tempLocation.x, tempLocation.y));
 //						
@@ -155,5 +148,10 @@ public class Wave implements Comparable, DrawingQueueable, AbstractModelRender{
 		Rectangle bounds = shape.getBounds();
 		bounds.translate(location.intX(), location.intY());
 		return bounds;
+	}
+
+	public void draw(Canvas g) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -71,33 +71,6 @@ public class PullString implements DrawingQueueable, AbstractModelRender {
 		return held;
 	}
 	
-	public double pull(double distance) {
-		
-		if (distance > LENGTH_MAX) {
-			drop();
-		}
-		
-		setWidth(distance);
-		
-		if (held) {
-			return (distance - LENGTH_MIN) * ELASTICITY;
-		}
-		else {
-			return 0;
-		}
-
-	}
-	
-	private void setWidth(double distance) {
-		if (held && distance > LENGTH_MIN) {
-			double distanceRatio = ((distance - LENGTH_MIN) / (LENGTH_MAX - LENGTH_MIN));
-			width = 1 - distanceRatio;
-		}
-		else {
-			width = 1;
-		}
-	}
-	
 	public void setStart(Vector start) {
 		this.start = start;
 	}

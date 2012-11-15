@@ -41,10 +41,6 @@ public class ToyRescue {
 	}
 	
 	private State state;
-		
-	private Window window;
-	
-	private Painter painter;
 	
 	private Boat toy;
 	
@@ -57,7 +53,6 @@ public class ToyRescue {
 	public ToyRescue() {
 		state = State.START;
 		
-		window = new Window();
 		toy = new Boat(400, 300);
 		painter = new Painter();
 		survivors = new LinkedList<Person>();
@@ -110,56 +105,7 @@ public class ToyRescue {
 	class Window extends JFrame {
 		
 		private Area wall;
-		
-		public static final int WALL_WIDTH = 20;
-		public static final int MENU_HEIGHT = 20;
-		
-		private final Cursor blankCursor;
-		
-		public Window() {
-	        this.getRootPane().addComponentListener(new ComponentAdapter() {
-	            public void componentResized(ComponentEvent e) {
-	                wall = generateWall();
-	            }
-	        });
-			
-			wall = generateWall();
-			
-			// Transparent 16 x 16 pixel cursor image.
-			BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 
-			// Create a new blank cursor.
-			blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-			    cursorImg, new Point(0, 0), "blank cursor");
-		}
-		
-		public void showCursor(boolean show) {
-			if (show) {
-				getContentPane().setCursor(null);
-			}
-			else {
-				getContentPane().setCursor(blankCursor);
-			}
-		}
-		
-		protected Area generateWall() {
-			GeneralPath wall = new GeneralPath();
-			int width = this.getWidth();
-			int height = this.getHeight();
-			int ww = WALL_WIDTH;
-			int wm = ww + MENU_HEIGHT;
-			
-			//Inner border
-			wall.moveTo(ww, wm);
-			wall.lineTo(width - ww, wm);
-			wall.lineTo(width - ww, height - ww);
-			wall.lineTo(ww, height - ww);
-			wall.lineTo(ww, wm);
-			wall.closePath();
-			
-			return new Area(wall);
-		}
-		
 		public Shape getWall() {
 			return wall;
 		}
@@ -216,7 +162,7 @@ public class ToyRescue {
 			if (wallCrash || handleCrash) { 
 				System.out.println("Crash: wall?"+wallCrash+" handle?"+handleCrash);
 				toy.crash();
-				state = LOST;
+				state = State.LOST;
 			}
 			
 			LinkedList<Person> pickedUp = new LinkedList<Person>();
@@ -245,35 +191,6 @@ public class ToyRescue {
 	
 	public void gameWon() {
 		state = State.WON;
-	}
-
-	class Painter {
-		private static final int TICK_ms = 20;
-		private long lastTick = 0;
-		private volatile boolean run;
-		
-		public synchronized void start() {
-			run = true;
-			loop();
-		}
-		
-		private void loop() {
-			while(run) {
-				tick();
-				window.repaint();
-				try {
-					Thread.sleep(TICK_ms);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}			
-		}
-		
-		public synchronized void stop() {
-			run = false;
-		}
-		
 	}
 
 }
