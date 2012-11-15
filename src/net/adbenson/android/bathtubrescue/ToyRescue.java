@@ -8,19 +8,18 @@ import net.adbenson.android.bathtubrescue.model.Handle;
 import net.adbenson.android.bathtubrescue.model.Person;
 import net.adbenson.android.drawing.Drawable;
 import net.adbenson.android.drawing.DrawingQueue;
+import net.adbenson.android.drawing.DrawingQueueable;
+import net.adbenson.android.drawing.QueuePopulator;
 import net.adbenson.android.drawing.Vector;
-import android.database.Cursor;
+import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.shapes.Shape;
-import android.hardware.Camera.Area;
+import android.util.Log;
+import android.view.SurfaceHolder;
 
-public class ToyRescue {
+public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 	
-	public static void main(String[] args) {
-		new ToyRescue();
-	}
-	
+	private static final String LOGTAG = ToyRescue.class.getCanonicalName();
+
 	public enum State {
 		START (false, true, false),
 		DROPPED (true, true, false),
@@ -40,6 +39,8 @@ public class ToyRescue {
 		}
 	}
 	
+	private CustomSurface drawingSurface;
+	
 	private State state;
 	
 	private Boat toy;
@@ -49,14 +50,24 @@ public class ToyRescue {
 	private LinkedList<Person> survivors;
 	private LinkedList<Person> floating;
 	
-	
-	public ToyRescue() {
+	public ToyRescue(CustomSurface surface) {
+		Log.i(LOGTAG, "Initializing ToyRescue");
+		
+		this.drawingSurface = surface;
+		
 		state = State.START;
 		
 		toy = new Boat(400, 300);
-		painter = new Painter();
+
+		initializePeople();
+		
+		handle = new Handle(50, 50);
+	}
+
+	private void initializePeople() {
 		survivors = new LinkedList<Person>();
 		floating = new LinkedList<Person>();
+		
 		Random r = new Random(System.currentTimeMillis());
 		for(int i=0; i < 10; i++) {
 			Vector location = new Vector(r.nextInt(760)+20, r.nextInt(540)+40);
@@ -64,119 +75,94 @@ public class ToyRescue {
 			survivors.add(p);
 			floating.add(p);
 		}
-		
-		window.addMouseMotionListener(new MouseMotionAdapter() {
-			public void mouseDragged(MouseEvent mouse) {
-				if (state == GRABBED) {
-					handle.setLocation(mouse.getPoint());
-				}
-			}
-		});
-		
-		window.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent arg0) {
-				mouseDown(arg0);
-			}
-			public void mouseReleased(MouseEvent arg0) {
-				mouseUp(arg0);
-			}
-			
-		});
-		
-		handle = new Handle(500, 200);
-		
-		painter.start();
 	}
-	
-	private void mouseDown(MouseEvent mouse) {
-		if (state.canPickup && handle.contains(mouse.getPoint())) {
+
+	public void grabbed(Vector location) {
+		Log.d(LOGTAG, "Touch down");
+		
+		if (state.canPickup && handle.contains(location)) {
 			state = State.GRABBED;
-			window.showCursor(false);
 		}
 	}
-	
-	private void mouseUp(MouseEvent mouse) {
-		window.showCursor(true);
+
+	public void dragged(Vector location) {
+		Log.d(LOGTAG, "Touch dragged");
+		handle.setLocation(location);	
+		if (state == State.GRABBED) {
+			handle.setLocation(location);
+		}
+	}
+
+	public void dropped(Vector location) {
+		Log.d(LOGTAG, "Touch released");
+		
 		if (state == State.GRABBED) {
 			state = State.DROPPED;
 		}
 	}
 	
-	class Window extends JFrame {
+	public void draw() {
+        drawingSurface.drawFrom(this);
+	}
+	
+	public void populateQueue(DrawingQueue queue) {
+		queue.add(new DrawingQueueable() {
+
+			public void enqueueForDraw(DrawingQueue queue) {
+				queue.add(new Drawable(-100) {
+
+					@Override
+					public void draw(Canvas g) {
+						g.drawColor(Color.WHITE);
+					}
+										
+				});
+			}
+			
+		});
 		
-		private Area wall;
+//        queue.add(toy);
 
-		public Shape getWall() {
-			return wall;
-		}
-				
-		public void paint(Graphics g) {
-			Image offscreen = createImage(this.getWidth(), this.getHeight());
-			
-			Graphics2D g2 = (Graphics2D) offscreen.getGraphics();			
-			
-	        g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING,
-	                              RenderingHints.VALUE_ANTIALIAS_ON );
-	        g2.setRenderingHint( RenderingHints.KEY_RENDERING,
-	                              RenderingHints.VALUE_RENDER_QUALITY );
-	        
-	        DrawingQueue queue = new DrawingQueue(g2);
-	        
-//	        g.setColor(Color.orange);
-//	        g.fillRect(0, 0, this.getWidth(), this.getHeight());
-	        
-	        queue.add(new Drawable(-50) {
-				@Override
-				public void draw(Graphics2D g) {
-			        g.setColor(Color.blue);
-			        g.fill(wall);
-				}
-	        });
-
-	        queue.add(toy);
-
-	       	queue.add(floating);
-	        
-	        queue.add(handle);
-	        
-	        queue.draw();
-	        g.drawImage(offscreen, 0, 0, this);
-		}
-
+//       	queue.add(floating);
+        
+        queue.add(handle);
 	}
 		
-	protected void tick() {
+	public void tick() {
+		handle.set(handle.x + 1, handle.y + 1);
 		if (state.isRunning) {
-			toy.pull(handle);
-			toy.move();
+//			toy.pull(handle);
+//			toy.move();
+			Log.d(LOGTAG, "Tick");
+
 			detectCollisions();
 		}
 	}
 		
 	private void detectCollisions() {
 		if (state.isRunning){ 
-			Rectangle toyBounds = toy.getBounds();
-			
-			boolean wallCrash = ! window.getWall().contains(toyBounds);
-			boolean handleCrash = handle.intersects(toy.getShape());
-			if (wallCrash || handleCrash) { 
-				System.out.println("Crash: wall?"+wallCrash+" handle?"+handleCrash);
-				toy.crash();
-				state = State.LOST;
-			}
-			
-			LinkedList<Person> pickedUp = new LinkedList<Person>();
-			for(Person p : floating) {
-				if (toy.intersects(p)) {
-					toy.pickup(p);
-					pickedUp.add(p);
-				}
-			}
-			floating.removeAll(pickedUp);
-			
-			if (floating.isEmpty()) {
-				
-			}
+//			Rectangle toyBounds = toy.getBounds();
+//			
+//			boolean wallCrash = ! window.getWall().contains(toyBounds);
+//			boolean handleCrash = handle.intersects(toy.getShape());
+//			if (wallCrash || handleCrash) { 
+//				System.out.println("Crash: wall?"+wallCrash+" handle?"+handleCrash);
+//				toy.crash();
+//				state = State.LOST;
+//			}
+//			
+//			LinkedList<Person> pickedUp = new LinkedList<Person>();
+//			for(Person p : floating) {
+//				if (toy.intersects(p)) {
+//					toy.pickup(p);
+//					pickedUp.add(p);
+//				}
+//			}
+//			floating.removeAll(pickedUp);
+//			
+//			if (floating.isEmpty()) {
+//				
+//			}
 		}
 		
 	}
@@ -191,6 +177,14 @@ public class ToyRescue {
 	
 	public void gameWon() {
 		state = State.WON;
+	}
+
+	public CustomSurface getDrawingSurface() {
+		return drawingSurface;
+	}
+
+	public void setDrawingSurface(CustomSurface drawingSurface) {
+		this.drawingSurface = drawingSurface;
 	}
 
 }
