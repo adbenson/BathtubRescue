@@ -2,17 +2,14 @@ package net.adbenson.android.bathtubrescue.render;
 
 import java.util.LinkedList;
 
-import net.adbenson.android.drawing.Drawable;
 import net.adbenson.android.drawing.DrawingQueue;
 import net.adbenson.android.drawing.DrawingQueueable;
-import net.adbenson.android.drawing.Vector;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Region;
-import android.graphics.drawable.shapes.Shape;
-import android.hardware.Camera.Area;
 
 
 public class Boat implements DrawingQueueable, AbstractModelRender{
@@ -28,12 +25,16 @@ public class Boat implements DrawingQueueable, AbstractModelRender{
 	
 	private LinkedList<Person> passengers;	
 	
+	private Paint paint;
+	
 	public Boat() {
 		
 		prototype = generateProtoShape();
 //		prototype.transform(AffineTransform.getScaleInstance(1.5, 1.5));
 		translateShape();
 
+		paint = new Paint();
+		paint.setColor(Color.YELLOW);
 	}
 
 
@@ -85,8 +86,7 @@ public class Boat implements DrawingQueueable, AbstractModelRender{
 	}
 
 	public void draw(Canvas g) {
-		// TODO Auto-generated method stub
-		
+		g.drawRect(new Rect(0, 0, 50, 100), paint);
 	}
 
 	public boolean intersects(AbstractModelRender that) {

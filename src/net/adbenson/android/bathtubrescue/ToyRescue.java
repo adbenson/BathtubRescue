@@ -26,7 +26,8 @@ public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 		GRABBED (true, false, false),
 		CLEARED (true, false, false),
 		WON (false, false, true),
-		LOST (false, false, true);
+		LOST (false, false, true),
+		PAUSE (false, false, false);
 		
 		public final boolean isRunning;
 		public final boolean canPickup;
@@ -41,9 +42,12 @@ public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 	
 	private CustomSurface drawingSurface;
 	
-	private State state;
+	private Ticker ticker;
 	
-	private Boat toy;
+	private State state;
+	private State resumeState;
+	
+	private Boat boat;
 	
 	private Handle handle;
 	
@@ -57,11 +61,13 @@ public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 		
 		state = State.START;
 		
-		toy = new Boat(400, 300);
+		boat = new Boat(100, 100);
 
 		initializePeople();
 		
 		handle = new Handle(50, 50);
+		
+		ticker = new Ticker(this, 20);
 	}
 
 	private void initializePeople() {
@@ -78,25 +84,27 @@ public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 	}
 
 	public void grabbed(Vector location) {
-		Log.d(LOGTAG, "Touch down");
-		
+		Log.v(LOGTAG, "Touch down");
+
 		if (state.canPickup && handle.contains(location)) {
+			Log.d(LOGTAG, "Handle Grabbed");
 			state = State.GRABBED;
 		}
 	}
 
 	public void dragged(Vector location) {
-		Log.d(LOGTAG, "Touch dragged");
-		handle.setLocation(location);	
+		Log.v(LOGTAG, "Touch dragged");
+	
 		if (state == State.GRABBED) {
 			handle.setLocation(location);
 		}
 	}
 
 	public void dropped(Vector location) {
-		Log.d(LOGTAG, "Touch released");
+		Log.v(LOGTAG, "Touch released");
 		
 		if (state == State.GRABBED) {
+			Log.d(LOGTAG, "Handle Grabbed");
 			state = State.DROPPED;
 		}
 	}
@@ -113,7 +121,7 @@ public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 
 					@Override
 					public void draw(Canvas g) {
-						g.drawColor(Color.WHITE);
+						g.drawColor(Color.rgb(168, 221, 237));
 					}
 										
 				});
@@ -121,7 +129,7 @@ public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 			
 		});
 		
-//        queue.add(toy);
+        queue.add(boat);
 
 //       	queue.add(floating);
         
@@ -129,11 +137,11 @@ public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 	}
 		
 	public void tick() {
-		handle.set(handle.x + 1, handle.y + 1);
+//		handle.set(handle.x + 1, handle.y + 1);
 		if (state.isRunning) {
 //			toy.pull(handle);
 //			toy.move();
-			Log.d(LOGTAG, "Tick");
+			Log.v(LOGTAG, "Tick");
 
 			detectCollisions();
 		}
@@ -167,6 +175,11 @@ public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 		
 	}
 	
+	public void start() {
+        ticker.setDrawing(true);
+        ticker.start();
+	}
+	
 	public void boardCleared() {
 		state = State.CLEARED;
 	}
@@ -177,6 +190,18 @@ public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 	
 	public void gameWon() {
 		state = State.WON;
+	}
+	
+	public void setPause(boolean pause) {
+		if(pause && state.isRunning) {
+			ticker.setPause(true);
+			resumeState = state;
+			state = State.PAUSE;
+		}
+		else if (!pause && state == State.PAUSE) {
+			ticker.setPause(false);
+			state = resumeState;
+		}
 	}
 
 	public CustomSurface getDrawingSurface() {

@@ -5,8 +5,6 @@ import net.adbenson.android.drawing.QueuePopulator;
 import net.adbenson.android.drawing.Vector;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -60,11 +58,11 @@ public class CustomSurface extends SurfaceView implements SurfaceHolder.Callback
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-//		ticker.setDrawing(false);
+		reciever.setPause(true);
 		
 		currentHolder = holder;
 				
-//		ticker.setDrawing(true);		
+		reciever.setPause(false);
 	}
 	
 	public void surfaceCreated(SurfaceHolder holder) {
@@ -73,7 +71,7 @@ public class CustomSurface extends SurfaceView implements SurfaceHolder.Callback
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		currentHolder = holder;
-//		ticker.setDrawing(false);
+		reciever.setPause(true);
 	}
 
 	public void drawFrom(QueuePopulator populator) {

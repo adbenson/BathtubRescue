@@ -44,8 +44,11 @@ public class Vector extends PointF {
 		return this.length();
 	}
 	
-	public float length(Vector v) {
-		return length(v.x, v.y);
+	public float length(Vector that) {
+		return (float) Math.sqrt(
+				Math.pow(this.x - that.x, 2)+
+				Math.pow(this.y - that.y, 2)
+				);
 	}
 	
 	public Vector scale(double delta) {

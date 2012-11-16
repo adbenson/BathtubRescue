@@ -32,7 +32,8 @@ public class Handle extends Vector implements DrawingQueueable{
 //	}
 
 	public boolean contains(Vector point) {
-		return (point.length(this) <= render.HALF_SIZE);
+		Log.d(LOGTAG, "len:"+point.length(this));
+		return (point.length(this) <= net.adbenson.android.bathtubrescue.render.Handle.HALF_SIZE);
 	}
 	
 	public Rect getBounds() {
@@ -73,8 +74,8 @@ public class Handle extends Vector implements DrawingQueueable{
 	public void enqueueForDraw(DrawingQueue queue) {
 		queue.add(new Drawable(15) {
 			public void draw(Canvas g) {
-				Log.d(LOGTAG, x+", "+y);
-				g.translate(x, y);
+//				Log.v(LOGTAG, x+", "+y);
+				g.translate(x - render.HALF_SIZE, y - render.HALF_SIZE);
 		        render.draw(g);
 			}
 		});

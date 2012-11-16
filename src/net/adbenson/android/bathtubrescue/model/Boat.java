@@ -53,6 +53,8 @@ public class Boat implements DrawingQueueable{
 		
 		fire = new Fire();
 		passengers = new LinkedList<Person>();
+		
+		render = new net.adbenson.android.bathtubrescue.render.Boat();
 	}
 	
 	public void crash() {
@@ -65,21 +67,6 @@ public class Boat implements DrawingQueueable{
 		Rect bounds = render.getBounds();
 		bounds.offsetTo(position.intX(), position.intY());
 		return bounds;
-	}
-	
-	protected Path generateProtoShape() {
-		Path shape = new Path();
-		shape.moveTo(-10, -20);
-		shape.lineTo(10, -20);
-		shape.lineTo(10, 5);
-		
-		shape.quadTo(10, 15, 0, 20);		
-		shape.quadTo(-10, 15, -10, 5);
-		
-		shape.lineTo(-10, -20);
-		shape.close();
-		
-		return shape;
 	}
 	
 	public boolean isStringHeld() {
@@ -154,18 +141,19 @@ public class Boat implements DrawingQueueable{
 	}
 	
 	public void enqueueForDraw(DrawingQueue queue) {
-		if (!crashed) {
-			queue.add(string);
-		}
-		else {
-			queue.add(fire);
-		}
+//		if (!crashed) {
+//			queue.add(string);
+//		}
+//		else {
+//			queue.add(fire);
+//		}
 
-		queue.add(passengers);
+//		queue.add(passengers);
 		
 		queue.add(new Drawable(-10) {
 			@Override
-			public void draw(Canvas g) {		
+			public void draw(Canvas g) {
+				g.translate(position.x, position.y);
 				render.draw(g);
 		                      
 		        if (debug) {

@@ -9,5 +9,7 @@ public interface InputReciever {
 	public void dragged(Vector location);
 	
 	public void dropped(Vector location);
+	
+	public void setPause(boolean pause);
 
 }

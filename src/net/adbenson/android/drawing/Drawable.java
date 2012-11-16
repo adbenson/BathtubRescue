@@ -17,11 +17,11 @@ public abstract class Drawable {
 	}
 
 	protected final void triggerDraw(Canvas g) {
-		setUp();
+		setUp(g);
 		
 		draw(g);
 		
-		tearDown();
+		tearDown(g);
 	}
 
 	public abstract void draw(Canvas g);
@@ -34,12 +34,11 @@ public abstract class Drawable {
 		this.layer = layer;
 	}
 	
-	protected void tearDown() {
-		// TODO Pre-draw setup
-		
+	protected void tearDown(Canvas g) {
+		g.translate(0, 0);
 	}
 
-	protected void setUp() {
+	protected void setUp(Canvas g) {
 		// TODO Post-draw teardown
 		
 	}

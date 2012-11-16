@@ -9,9 +9,7 @@ import android.view.WindowManager;
 
 public class MainActivity extends Activity {
 	
-	private Ticker ticker;
-	
-	private ToyRescue main;
+	private ToyRescue game;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,14 +23,11 @@ public class MainActivity extends Activity {
                                
         CustomSurface surface = (CustomSurface) findViewById(R.id.surface);
 
-        main = new ToyRescue(surface);
+        game = new ToyRescue(surface);
         
-        surface.setInputReciever(main);
+        surface.setInputReciever(game);
         
-        ticker = new Ticker(main, 20);
-        
-        ticker.setDrawing(true);
-        ticker.start();
+        game.start();
         
     }
 
@@ -44,12 +39,12 @@ public class MainActivity extends Activity {
     
     @Override
     public boolean onMenuOpened(int i, Menu m) {
-    	ticker.setPause(true);
+    	game.setPause(true);
     	return super.onMenuOpened(i, m);
     }
     
     @Override
     public void onOptionsMenuClosed(Menu m) {
-       ticker.setPause(false);
+       game.setPause(false);
     }
 }
