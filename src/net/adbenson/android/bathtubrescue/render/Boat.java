@@ -6,6 +6,7 @@ import net.adbenson.android.drawing.DrawingQueue;
 import net.adbenson.android.drawing.DrawingQueueable;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -30,6 +31,9 @@ public class Boat implements DrawingQueueable, AbstractModelRender{
 	public Boat() {
 		
 		prototype = generateProtoShape();
+		Matrix m = new Matrix();
+		m.setScale(1.5f,  1.5f);
+		prototype.transform(m);
 //		prototype.transform(AffineTransform.getScaleInstance(1.5, 1.5));
 		translateShape();
 

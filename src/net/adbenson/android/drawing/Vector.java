@@ -5,7 +5,7 @@ import android.graphics.PointF;
 
 public class Vector extends PointF {
 		
-	static final double FULL_CIRCLE = 2 * Math.PI;
+	static final float FULL_CIRCLE = (float) (2f * Math.PI);
 	
 	public Vector() {
 		this(0, 0);
@@ -24,9 +24,9 @@ public class Vector extends PointF {
 		return new Vector(-x, -y);
 	}
 
-	public double getAngle() {
+	public float getAngle() {
 		Vector normal = this.normalize();
-		double angle = (FULL_CIRCLE - Math.atan2(normal.x, normal.y));				
+		float angle = (float) (FULL_CIRCLE - Math.atan2(normal.x, normal.y));				
 		return angle;
 	}
 
@@ -40,7 +40,7 @@ public class Vector extends PointF {
 		}
 	}
 	
-	public double magnitude() {
+	public float magnitude() {
 		return this.length();
 	}
 	

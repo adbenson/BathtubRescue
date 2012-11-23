@@ -6,6 +6,8 @@ import net.adbenson.android.drawing.DrawingQueueable;
 import net.adbenson.android.drawing.Vector;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 
@@ -13,7 +15,7 @@ public class PullString implements DrawingQueueable, AbstractModelRender {
 	
 	public static final int LENGTH_MIN = 35;
 	public static final int LENGTH_MAX = 300;
-	public static final float BASE_WIDTH = 6;
+	public static final float BASE_WIDTH = 20;
 	public static final float MIN_WIDTH = 0.5f;
 
 	private static final float ELASTICITY = 0.01f;
@@ -23,23 +25,40 @@ public class PullString implements DrawingQueueable, AbstractModelRender {
 	private Path topSpring;
 	private Path bottomSpring;
 	
-	private Vector end;
-	private Vector start;
-	private Vector trail;
+	private Path tempPath;
+		
+	private Matrix scale;
+	private Matrix rotate;
 	
 	private int color = Color.GREEN;
 	
-	private double width;
+	private float width;
 	
 	private boolean held;
 	
+	private Paint paintTop;
+	private Paint paintBottom;
+	
+	
 	public PullString() {
-		start = new Vector(0, 0);
-		end = new Vector(0, 0);
-		generateSprings();
+		paintTop = new Paint(Paint.ANTI_ALIAS_FLAG);
+		
+		paintTop.setColor(Color.GREEN);
+		paintTop.setStyle(Paint.Style.STROKE); 
+		paintTop.setStrokeWidth(3);
+		
+		paintBottom = new Paint(Paint.ANTI_ALIAS_FLAG);
+		
+		paintBottom.setColor(Color.rgb(0, 192, 0));
+		paintBottom.setStyle(Paint.Style.STROKE); 
+		paintBottom.setStrokeWidth(3);
+		
+		scale = new Matrix();
+		rotate = new Matrix();
+		tempPath = new Path();
 	}
 	
-	private void generateSprings() {
+	public void generateSprings() {
 		float halfWidth = BASE_WIDTH / 2.0f;
 		
 		topSpring = new Path();
@@ -56,37 +75,6 @@ public class PullString implements DrawingQueueable, AbstractModelRender {
 			bottomSpring.moveTo(i+2, halfWidth);
 		}
 	}
-	
-	public void drop() {
-		System.out.println("String dropped");
-		held = false;
-		width = 1;
-	}
-	
-	public void grab() {
-		System.out.println("String grabbed");
-		held = true;
-	}
-
-	public boolean isHeld() {
-		return held;
-	}
-	
-	public void setStart(Vector start) {
-		this.start = start;
-	}
-	
-	public void setEnd(Vector end) {
-		this.end = end;		
-	}
-
-	public void setTrail(Vector trajectory) {
-		trail = start.add(trajectory.normalize().invert().scale(PullString.LENGTH_MIN*2));
-	}
-
-	public Vector getEnd() {
-		return end;
-	}
 
 	public void enqueueForDraw(DrawingQueue queue) {
 		queue.add(new Drawable(10) {
@@ -99,7 +87,7 @@ public class PullString implements DrawingQueueable, AbstractModelRender {
 //				
 //				AffineTransform scale = AffineTransform.getScaleInstance(path.magnitude() / LENGTH_MIN, width);
 //				AffineTransform rotate = AffineTransform.getRotateInstance(path.getAngle()-HALF_PI);
-//				AffineTransform translate = AffineTransform.getTranslateInstance(start.x, start.y);
+//				AffineTransform translate = AffineTransform.getTranslateInstance(start.x, start.y);		
 //				
 //				Path tempTop = new Path(topSpring);
 //				Path tempBottom = new Path(bottomSpring);
@@ -126,10 +114,6 @@ public class PullString implements DrawingQueueable, AbstractModelRender {
 		});
 	}
 
-	public Vector getTrail() {
-		return trail;
-	}
-
 	public void draw(Canvas g) {
 		// TODO Auto-generated method stub
 		
@@ -143,6 +127,34 @@ public class PullString implements DrawingQueueable, AbstractModelRender {
 	public boolean intersects(AbstractModelRender that) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void draw(Canvas g, Vector start, Vector end) {
+		Vector path = start.subtract(end);
+		
+		scale.reset();
+		scale.setScale(path.magnitude() / LENGTH_MIN, width);
+		
+		rotate.reset();
+		scale.postRotate((float) Math.toDegrees(path.getAngle()-HALF_PI));
+		
+		tempPath.reset();
+		bottomSpring.transform(scale, tempPath);
+//		bottomSpring.transform(rotate, tempPath);
+		g.drawPath(tempPath, paintBottom);
+		
+		tempPath.reset();
+		topSpring.transform(scale, tempPath);
+//		topSpring.transform(rotate, tempPath);
+		g.drawPath(tempPath, paintTop);
+		
+
+		
+//		g.drawLine(start.x, start.y, end.x, end.y, paintTop);
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
 	}
 
 }

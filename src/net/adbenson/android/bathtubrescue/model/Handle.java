@@ -32,7 +32,6 @@ public class Handle extends Vector implements DrawingQueueable{
 //	}
 
 	public boolean contains(Vector point) {
-		Log.d(LOGTAG, "len:"+point.length(this));
 		return (point.length(this) <= net.adbenson.android.bathtubrescue.render.Handle.HALF_SIZE);
 	}
 	

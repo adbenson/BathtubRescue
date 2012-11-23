@@ -13,12 +13,12 @@ import android.graphics.Rect;
 
 public class Boat implements DrawingQueueable{
 		
-	private static final double FRICTION = 0.95;
-	private static final double MAX_TURN_RADIUS = 0.5;
-	private static final double MAX_ACCELERATION = 2.0;
+	private static final float FRICTION = 0.98f;
+	private static final float MAX_TURN_RADIUS = 0.5f;
+	private static final float MAX_ACCELERATION = 2.0f;
 	private static final int PASSENGER_SPACE = 30;
 	private static final int PASSENGER_VERTICAL_OFFSET = -10;
-	
+
 	private static final int BOW_DISTANCE = 20;
 	
 	private net.adbenson.android.bathtubrescue.render.Boat render;
@@ -107,12 +107,12 @@ public class Boat implements DrawingQueueable{
 			string.setEnd(handle);
 			
 			Vector pull = handle.subtract(position);
-			double pullDistance = pull.magnitude();
+			float pullDistance = pull.magnitude();
 			
-			double pullForce = string.pull(pullDistance);
+			float pullForce = string.pull(pullDistance);
 			
 			//Max acceleration decreases at half the rate of passenger increase
-			double accelCap = MAX_ACCELERATION / (passengers.size()/2);
+			float accelCap = MAX_ACCELERATION / (passengers.size()/2f);
 			pullForce = Math.max(0, Math.min(pullForce, accelCap)); //Constrain the force to the max acceleration
 			
 			Vector pullDirection = pull.normalize();
@@ -142,7 +142,7 @@ public class Boat implements DrawingQueueable{
 	
 	public void enqueueForDraw(DrawingQueue queue) {
 //		if (!crashed) {
-//			queue.add(string);
+			queue.add(string);
 //		}
 //		else {
 //			queue.add(fire);

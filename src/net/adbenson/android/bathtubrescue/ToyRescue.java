@@ -139,8 +139,8 @@ public class ToyRescue implements Timed, QueuePopulator, InputReciever{
 	public void tick() {
 //		handle.set(handle.x + 1, handle.y + 1);
 		if (state.isRunning) {
-//			toy.pull(handle);
-//			toy.move();
+			boat.pull(handle);
+			boat.move();
 			Log.v(LOGTAG, "Tick");
 
 			detectCollisions();

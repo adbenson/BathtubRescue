@@ -6,9 +6,12 @@ import net.adbenson.android.drawing.DrawingQueueable;
 import net.adbenson.android.drawing.Vector;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Path;
+import android.graphics.Paint;
+import android.util.Log;
 
 public class PullString implements DrawingQueueable {
+	
+	private static final String LOGTAG = PullString.class.getCanonicalName();
 		
 	public static final int LENGTH_MIN = 35;
 	public static final int LENGTH_MAX = 300;
@@ -25,24 +28,20 @@ public class PullString implements DrawingQueueable {
 	private Vector start;
 	private Vector trail;
 	
-	private double width;
-	
 	private boolean held;
 	
 	public PullString() {
 		start = new Vector(0, 0);
 		end = new Vector(0, 0);
-		generateSprings();
-	}
-	
-	private void generateSprings() {
-		float halfWidth = BASE_WIDTH / 2.0f;
+		
+		render = new net.adbenson.android.bathtubrescue.render.PullString();
+		render.generateSprings();
 	}
 	
 	public void drop() {
 		System.out.println("String dropped");
 		held = false;
-		width = 1;
+		render.setWidth(1);
 	}
 	
 	public void grab() {
@@ -54,7 +53,7 @@ public class PullString implements DrawingQueueable {
 		return held;
 	}
 	
-	public double pull(double distance) {
+	public float pull(float distance) {
 		
 		if (distance > LENGTH_MAX) {
 			drop();
@@ -71,13 +70,13 @@ public class PullString implements DrawingQueueable {
 
 	}
 	
-	private void setWidth(double distance) {
+	private void setWidth(float distance) {
 		if (held && distance > LENGTH_MIN) {
-			double distanceRatio = ((distance - LENGTH_MIN) / (LENGTH_MAX - LENGTH_MIN));
-			width = 1 - distanceRatio;
+			float distanceRatio = ((distance - LENGTH_MIN) / (LENGTH_MAX - LENGTH_MIN));
+			render.setWidth(1 - distanceRatio);
 		}
 		else {
-			width = 1;
+			render.setWidth(1);
 		}
 	}
 	
@@ -99,9 +98,14 @@ public class PullString implements DrawingQueueable {
 
 	public void enqueueForDraw(DrawingQueue queue) {
 		queue.add(new Drawable(10) {
+			
 			@Override
 			public void draw(Canvas g) {
-				render.draw(g);
+				Vector tempEnd = held? end : trail;
+				g.translate(start.x, start.y);
+				
+				render.draw(g, start, tempEnd);
+
 			}
 			
 		});

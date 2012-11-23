@@ -34,13 +34,12 @@ public abstract class Drawable {
 		this.layer = layer;
 	}
 	
-	protected void tearDown(Canvas g) {
-		g.translate(0, 0);
-	}
-
 	protected void setUp(Canvas g) {
-		// TODO Post-draw teardown
-		
+		g.save();
+	}
+	
+	protected void tearDown(Canvas g) {
+		g.restore();
 	}
 	
 	public static final class Compare implements Comparator<Drawable> {
